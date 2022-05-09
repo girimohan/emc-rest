@@ -39,6 +39,8 @@ public class QuestionControllerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getServletPath();
+		List <Question> questionsList = viewAllQuestions(request, response);
+		RequestDispatcher dispatcher;
 		
 		List <Question> questionsList = viewAllQuestions(request, response);
 		RequestDispatcher dispatcher;
@@ -47,6 +49,7 @@ public class QuestionControllerServlet extends HttpServlet {
 		 switch (action) {
 		 
 		  case "/questions":
+
 			  request.setAttribute("QUESTIONS_LIST", questionsList);
 			  VIEW_URL = "/questions.jsp";
 			  break;
@@ -59,6 +62,9 @@ public class QuestionControllerServlet extends HttpServlet {
 		  case "/admin/questions/add":
 			  VIEW_URL = "/admin/addquestion.jsp";
 			  break;
+			  
+			 
+		  
 			  
 		 }
 		 
