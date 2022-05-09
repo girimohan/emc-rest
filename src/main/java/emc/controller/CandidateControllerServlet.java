@@ -35,10 +35,19 @@ public class CandidateControllerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getServletPath();
+		List<Candidate> candidatesList =viewAllCandidates(request, response);
+		RequestDispatcher dispatcher;
 		
 		 switch (action) {
 		  case "/candidates":
-			  viewAllCandidates(request, response);
+			  request.setAttribute("CANDIDATES_LIST", candidatesList);
+			  dispatcher = request.getRequestDispatcher("/candidates.jsp");
+			  dispatcher.forward(request, response);
+			  break;
+		  case "/admin/candidates":
+			  request.setAttribute("CANDIDATES_LIST", candidatesList);
+			  dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+			  dispatcher.forward(request, response);
 			  break;
 		 }
 		
@@ -60,7 +69,7 @@ public class CandidateControllerServlet extends HttpServlet {
 	 * Method gets candidates data from the rest service URL and sends data in request to JSP(View) for user.
 	 */
 	
-	private void viewAllCandidates(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+	private List<Candidate> viewAllCandidates(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		 REST_URI = "http://127.0.0.1:8080/_rest/candidate/all";
 		 
@@ -72,14 +81,9 @@ public class CandidateControllerServlet extends HttpServlet {
 		
 		List<Candidate> candidatesList = builder.get(genericList);
 		
-		//Add candidates list to the request
-				request.setAttribute("CANDIDATES_LIST", candidatesList);
-
-				//Send to JSP Page (View)
-
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/candidates.jsp");
-				dispatcher.forward(request, response);		
+		return candidatesList;	
 		
 	}
+	
 
 }
