@@ -30,6 +30,16 @@ public class Question implements Serializable {
 	public Question() {
 	}
 
+	
+
+
+	public Question(String question) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
 	public int getQuestionId() {
 		return this.questionId;
 	}
