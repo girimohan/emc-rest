@@ -35,11 +35,24 @@ public class QuestionControllerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getServletPath();
+		List <Question> questionsList = viewAllQuestions(request, response);
+		RequestDispatcher dispatcher;
 		
 		 switch (action) {
 		  case "/questions":
-			  viewQuestionsToAnswer(request, response);
+			  
+			  request.setAttribute("QUESTIONS_LIST", questionsList);
+			  dispatcher=request.getRequestDispatcher("/questions.jsp");
+			  dispatcher.forward(request, response);
 			  break;
+			  
+		  case "/admin/questions":
+			  request.setAttribute("QUESTIONS_LIST", questionsList);
+			  dispatcher=request.getRequestDispatcher("/admin/questions.jsp");
+			  dispatcher.forward(request, response);
+			  break;
+			  
+			 
 		  
 			  
 		 }
@@ -55,14 +68,15 @@ public class QuestionControllerServlet extends HttpServlet {
 	
 	/**
 	 * Method gets question data from the rest service URL and sends data in request to JSP(View) for user to answer
-	 * @author DGautam
+	 * @author SURAJ
 	 * @param request
 	 * @param response
+	 * @return 
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
 	
-	private void viewQuestionsToAnswer(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+	private List<Question> viewAllQuestions(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		REST_URI = "http://127.0.0.1:8080/_rest/question/all";
 		 
@@ -72,15 +86,9 @@ public class QuestionControllerServlet extends HttpServlet {
 	
 	   	GenericType<List<Question>> genericList = new GenericType<List<Question>>() {};
 		
-		List<Question> candidatesList = builder.get(genericList);
+		List<Question> questionsList = builder.get(genericList);
 		
-		//Add candidates list to the request
-				request.setAttribute("QUESTIONS_LIST", candidatesList);
-
-				//Send to JSP Page (View)
-
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/questions.jsp");
-				dispatcher.forward(request, response);	
+		return questionsList;
 		
 	}
 	
