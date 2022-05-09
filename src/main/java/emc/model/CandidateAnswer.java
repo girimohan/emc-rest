@@ -3,6 +3,8 @@ package emc.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The persistent class for the candidate_answers database table.
@@ -11,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="candidate_answers")
 @NamedQuery(name="CandidateAnswer.findAll", query="SELECT c FROM CandidateAnswer c")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CandidateAnswer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -20,8 +23,9 @@ public class CandidateAnswer implements Serializable {
 	private byte answer;
 
 	//bi-directional many-to-one association to Candidate
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="candidate_id")
+	@JsonIgnoreProperties("candidateAnswers")
 	private Candidate candidate;
 
 	//bi-directional many-to-one association to Question
