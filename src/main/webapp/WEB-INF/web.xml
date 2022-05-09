@@ -68,6 +68,9 @@
     <servlet-name>QuestionControllerServlet</servlet-name>
     <url-pattern>/questions</url-pattern>
     <url-pattern>/admin/questions</url-pattern>
+    <url-pattern>/admin/questions/add</url-pattern>
+    
+
   </servlet-mapping>
   
   
