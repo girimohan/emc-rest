@@ -41,6 +41,32 @@
 	-->
 	<servlet-mapping>
 		<servlet-name>CandidateService</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>_rest/*</url-pattern>
 	</servlet-mapping>
+	
+	
+  
+  <servlet>
+    <description></description>
+    <display-name>CandiddateControllerServlet</display-name>
+    <servlet-name>CandidateControllerServlet</servlet-name>
+    <servlet-class>emc.controller.CandidateControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CandidateControllerServlet</servlet-name>
+    <url-pattern>/candidates</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>QuestionControllerServlet</display-name>
+    <servlet-name>QuestionControllerServlet</servlet-name>
+    <servlet-class>emc.controller.QuestionControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuestionControllerServlet</servlet-name>
+    <url-pattern>/questions</url-pattern>
+  </servlet-mapping>
+  
+  
 </web-app>

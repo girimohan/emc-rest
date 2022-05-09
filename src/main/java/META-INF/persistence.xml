@@ -5,6 +5,8 @@
 		<class>emc.model.CandidateAnswerPK</class>
 		<class>emc.model.Candidate</class>
 		<class>emc.model.Question</class>
+		<class>emc.model.Admin</class>
+		<class>emc.model.Party</class>
 	
 		<!--  jdbcDriver == class, where in the implementation of database functions--> 
 		<!--  jdbcUrl == address to the database--> 

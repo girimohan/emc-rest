@@ -8,16 +8,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import emc.model.Candidate;
+import emc.model.Question;
 
-
-@Path("/candidate")
-public class CandidateService {
-	
+@Path("/question")
+public class QuestionService {
 	
 	/**
 	 * Entity Manager
@@ -29,17 +28,24 @@ public class CandidateService {
 	@GET
 	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Candidate> getAllCandidates() throws ServletException, IOException
+	public List<Question> getAllQuestions() throws ServletException, IOException
 	{
 		
-		String query = "SELECT c FROM Candidate c";
-		List<Candidate> candidatesList = em.createQuery(query).getResultList(); 
-		return candidatesList;
+		String query = "SELECT q FROM Question q";
+		List<Question> questionsList = em.createQuery(query).getResultList(); 
+		return questionsList;
 				
    }
-  
- 
- 
-  
-  
+	
+   @POST
+   @Path("/add")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<Question> addQuestion(){
+	   
+	return null;
+	   
+   }
+	
+	
+
 }

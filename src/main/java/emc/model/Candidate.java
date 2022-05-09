@@ -2,6 +2,9 @@ package emc.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 
@@ -12,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name="candidates")
 @NamedQuery(name="Candidate.findAll", query="SELECT c FROM Candidate c")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Candidate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -24,23 +28,27 @@ public class Candidate implements Serializable {
 
 	private String firstname;
 
-	private String party;
+	private String ideology;
+
+	private String img;
 
 	@Lob
-	private String password;
+	private String motive;
 
 	private String profession;
 
-	@Lob
-	private String salt;
-
 	private String surname;
 
-	private String username;
-
 	//bi-directional many-to-one association to CandidateAnswer
-	@OneToMany(mappedBy="candidate")
+	@OneToMany(fetch = FetchType.LAZY,mappedBy="candidate")
+	@JsonIgnoreProperties("candidate")
 	private List<CandidateAnswer> candidateAnswers;
+
+	//bi-directional many-to-one association to Party
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="party_id")
+	@JsonIgnoreProperties("candidates")
+	private Party party;
 
 	public Candidate() {
 	}
@@ -69,20 +77,28 @@ public class Candidate implements Serializable {
 		this.firstname = firstname;
 	}
 
-	public String getParty() {
-		return this.party;
+	public String getIdeology() {
+		return this.ideology;
 	}
 
-	public void setParty(String party) {
-		this.party = party;
+	public void setIdeology(String ideology) {
+		this.ideology = ideology;
 	}
 
-	public String getPassword() {
-		return this.password;
+	public String getImg() {
+		return this.img;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public String getMotive() {
+		return this.motive;
+	}
+
+	public void setMotive(String motive) {
+		this.motive = motive;
 	}
 
 	public String getProfession() {
@@ -93,28 +109,12 @@ public class Candidate implements Serializable {
 		this.profession = profession;
 	}
 
-	public String getSalt() {
-		return this.salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-
 	public String getSurname() {
 		return this.surname;
 	}
 
 	public void setSurname(String surname) {
 		this.surname = surname;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public List<CandidateAnswer> getCandidateAnswers() {
@@ -137,6 +137,14 @@ public class Candidate implements Serializable {
 		candidateAnswer.setCandidate(null);
 
 		return candidateAnswer;
+	}
+
+	public Party getParty() {
+		return this.party;
+	}
+
+	public void setParty(Party party) {
+		this.party = party;
 	}
 
 }
