@@ -55,6 +55,7 @@
   <servlet-mapping>
     <servlet-name>CandidateControllerServlet</servlet-name>
     <url-pattern>/candidates</url-pattern>
+    <url-pattern>/admin/candidates</url-pattern>
   </servlet-mapping>
   
   <servlet>
