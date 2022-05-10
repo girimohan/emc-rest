@@ -12,6 +12,7 @@
 </head>
 <body>
 
+
 <c:if test="${MSG != null}">
          <p class="msg"><c:out value="${MSG}"></c:out><p>
       </c:if>  
@@ -22,7 +23,6 @@
         <a href="/admin/questions/add"><button class=" btn addnew btn-prim"> Add Questions </button></a>
     </div>
     
-  
 <div class = "datatable">
 	<table id = "table_id" class= "display">
 	<thead>
@@ -30,29 +30,38 @@
 	<th> Question </th>
 	<th> Action </th>
 
+
 	</tr>
 	</thead>
-
 	<tbody>
-
+	
 	<c:forEach var="questions" items="${QUESTIONS_LIST }">
-
+	
 		<tr>
 		<td> ${questions.question } </td>
 		<td>
+
 		<a href = "/admin/question/update?id=
 		${questions.questionId}" ><button class ="btn btn-prim"> UPDATE</button></a>
-		<a href = "" onclick = "return confirm('Are you sure you want to delete?')"> <button class= "btn btn-danger">DELETE</button></a>
+		<a href = "/admin/questions/delete?id=${questions.questionId}" onclick = "return confirm('Are you sure you want to delete?')"> <button class= "btn btn-danger">DELETE</button></a>
+
 		</td>
 		</tr>
+
 
 	</c:forEach>
 
 
 	</tbody>
 
+		
+
 	</table>
 </div>
 
 </body>
-</html> 
+
+ 
+
+</html>
+

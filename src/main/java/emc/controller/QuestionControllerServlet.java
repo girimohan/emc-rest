@@ -26,6 +26,8 @@ import emc.model.Question;
 
 public class QuestionControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private  String VIEW_URL = null;
      
 	private Client client = ClientBuilder.newClient();
 
@@ -39,6 +41,8 @@ public class QuestionControllerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getServletPath();
+		List <Question> questionsList = viewAllQuestions(request, response);
+		RequestDispatcher dispatcher;
 		
 		List <Question> questionsList = viewAllQuestions(request, response);
 		RequestDispatcher dispatcher;
@@ -47,6 +51,7 @@ public class QuestionControllerServlet extends HttpServlet {
 		 switch (action) {
 		 
 		  case "/questions":
+
 			  request.setAttribute("QUESTIONS_LIST", questionsList);
 			  VIEW_URL = "/questions.jsp";
 			  break;
@@ -60,18 +65,30 @@ public class QuestionControllerServlet extends HttpServlet {
 			  VIEW_URL = "/admin/addquestion.jsp";
 			  break;
 			  
-			//mo start 
+
 		  
 		  case "/admin/question/update":
 			  loadQuestionToUpdate(request, response);
 			  VIEW_URL = "/admin/questionupdate.jsp";
 			  break;
 			  
-			 //mo end
+
+		  case "/admin/questions/delete":
+			List<Question> questionList = deleteQuestion(request, response);
+			VIEW_URL = "/admin/questions.jsp";
+			request.setAttribute("MSG", "Question deleted successfully");
+			request.setAttribute("QUESTIONS_LIST", questionsList);
+			break;
+		  
+			  
+
 		 }
 		 
+
+
 		  dispatcher=request.getRequestDispatcher(VIEW_URL);
 		  dispatcher.forward(request, response);
+
 		 
 	}
 
@@ -142,7 +159,21 @@ public class QuestionControllerServlet extends HttpServlet {
 		return questionsList;
 		
 	}
+	private List<Question> deleteQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String questionId=request.getParameter("id");
+		REST_URI = "http://127.0.0.1:8080/_rest/questions/delete/"+questionId;
+		WebTarget webTarget = client.target(REST_URI);
+		Builder builder = webTarget.request();
+		GenericType<List<Question>> genericList = new GenericType<List<Question>>() {};
+		List<Question>questionList=builder.delete(genericList);
+		request.setAttribute("QUESTIONS_LIST", questionList);
+		return questionList;
+		
+		
+	}
+
 	
+
 	//mo start
 		private void loadQuestionToUpdate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 			String id = request.getParameter("id");
@@ -189,4 +220,8 @@ public class QuestionControllerServlet extends HttpServlet {
 	
 	
 
-}
+	}
+
+
+
+
