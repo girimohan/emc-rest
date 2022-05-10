@@ -29,7 +29,7 @@ public class Party implements Serializable {
 
 	//bi-directional many-to-one association to Candidate
 	@OneToMany(fetch = FetchType.LAZY,mappedBy="party")
-	@JsonIgnoreProperties("party")
+	@JsonIgnoreProperties(value="party",allowSetters=true)
 	private List<Candidate> candidates;
 
 	public Party() {

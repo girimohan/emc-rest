@@ -40,6 +40,7 @@ public class QuestionControllerServlet extends HttpServlet {
 		  case "/questions":
 			  viewQuestionsToAnswer(request, response);
 			  break;
+			  
 		  
 			  
 		 }

@@ -10,7 +10,17 @@
 <title>Insert title here</title>
 </head>
 <body>
+<main>
+<div class="pg-m">
 
+<c:url var="add" value="/admin/candidates/add">
+	</c:url>
+			
+		<p class="breadcrumb"><a href=""><i class="fa-solid fa-arrow-left"></i> Dashboard</a></p>
+        <h1 class="pg-heading"><i class="fa-solid fa-person"></i> Candidates</h1>
+        <a href="${add}"><button class=" btn addnew btn-prim"> NEW CANDIDATE </button></a>
+		
+		</div>
 <div class ="datatable">
 		
 	<table id ="table_id" class="display">
@@ -31,7 +41,7 @@
 		  		<td> ${candidates.party.party}</td>
 				<td>
 				<a href=""><button class=" btn btn-prim">UPDATE</button></a>
-		  		<a href="" onclick="return confirm('Are you sure you want to delete?');"><button class=" btn btn-danger">DELETE</button></a>
+		  		<a href="/admin/candidates/delete?id=${candidates.candidateId}" onclick="return confirm('Are you sure you want to delete?');"><button class=" btn btn-danger">DELETE</button></a>
 		  		</td>
 		  	</tr>
   
@@ -40,6 +50,6 @@
   		</tbody>
    	</table>
 	</div>
-
+</main>
 </body>
 </html>
