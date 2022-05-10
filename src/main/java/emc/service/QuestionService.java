@@ -8,7 +8,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
+
 import javax.ws.rs.DELETE;
+
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -36,19 +39,26 @@ public class QuestionService {
 	public List<Question> getAllQuestions() throws ServletException, IOException
 	{
 		
-		String query = "SELECT q FROM Question q";
+		String query = "SELECT q FROM Question q ORDER BY q.questionId DESC";
 		List<Question> questionsList = em.createQuery(query).getResultList(); 
 		return questionsList;
 				
    }
-	
+	//mo start
    @POST
    @Path("/add")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Question> addQuestion(){
+   @Consumes(MediaType.APPLICATION_JSON)
+   public List<Question> addQuestion(Question question) throws ServletException, IOException {
+	   EntityManager em = emf.createEntityManager();
+	   em.getTransaction().begin();
+	   em.persist(question);
+	   em.getTransaction().commit();
+	   List<Question> questionList = getAllQuestions();
 	   
-	return null;
+	return questionList;
 	   
+
    }
    @DELETE
    @Path("/delete/{id}")
@@ -66,6 +76,10 @@ public class QuestionService {
 	  return questionlist;
 	   
    }
+
+
+   
+	
 
 
 }

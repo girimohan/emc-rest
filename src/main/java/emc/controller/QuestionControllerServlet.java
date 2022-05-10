@@ -32,6 +32,8 @@ public class QuestionControllerServlet extends HttpServlet {
 	private Client client = ClientBuilder.newClient();
 
 	private String REST_URI;
+	
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,18 +44,25 @@ public class QuestionControllerServlet extends HttpServlet {
 		List <Question> questionsList = viewAllQuestions(request, response);
 		RequestDispatcher dispatcher;
 		
+		List <Question> questionsList = viewAllQuestions(request, response);
+		RequestDispatcher dispatcher;
+		String VIEW_URL = null;
+		
 		 switch (action) {
+		 
 		  case "/questions":
-			  
+
 			  request.setAttribute("QUESTIONS_LIST", questionsList);
-			  dispatcher=request.getRequestDispatcher("/questions.jsp");
-			  dispatcher.forward(request, response);
+			  VIEW_URL = "/questions.jsp";
 			  break;
 			  
 		  case "/admin/questions":
 			  request.setAttribute("QUESTIONS_LIST", questionsList);
-			  dispatcher=request.getRequestDispatcher("/admin/questions.jsp");
-			  dispatcher.forward(request, response);
+			  VIEW_URL = "/admin/questions.jsp";
+			  break;
+	     
+		  case "/admin/questions/add":
+			  VIEW_URL = "/admin/addquestion.jsp";
 			  break;
 			  
 		  case "/admin/questions/delete":
@@ -61,13 +70,16 @@ public class QuestionControllerServlet extends HttpServlet {
 			VIEW_URL = "/admin/questions.jsp";
 			request.setAttribute("MSG", "Question deleted successfully");
 			request.setAttribute("QUESTIONS_LIST", questionsList);
-			dispatcher = request.getRequestDispatcher(VIEW_URL);
-			dispatcher.forward(request, response);
 			break;
 		  
 			  
 		 }
 		 
+
+=======
+		  dispatcher=request.getRequestDispatcher(VIEW_URL);
+		  dispatcher.forward(request, response);
+
 		 
 	}
 
@@ -75,6 +87,33 @@ public class QuestionControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String question = request.getParameter("question");
+		System.out.println(question);
+		
+		Question nquestion = new Question();
+		
+		nquestion.setQuestion(question);
+		
+		REST_URI = "http://127.0.0.1:8080/_rest/questions/add";
+		WebTarget webTarget = client.target(REST_URI);
+		Builder builder = webTarget.request();
+		
+		Entity<Question> equestion = Entity.entity(nquestion,MediaType.APPLICATION_JSON);
+		
+		GenericType<List<Question>> genericList = new GenericType<List<Question>>() {};
+		
+		List<Question> questionList = builder.post(equestion,genericList);
+		
+		request.setAttribute("QUESTIONS_LIST", questionList);
+		request.setAttribute("MSG", "Question Added Successfully");
+		
+		RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/questions.jsp");
+		dispatcher.forward(request, response);
+		
+		
+		
+		
 		
 		
 	}
@@ -119,5 +158,6 @@ public class QuestionControllerServlet extends HttpServlet {
 
 	
 	}
+
 
 
