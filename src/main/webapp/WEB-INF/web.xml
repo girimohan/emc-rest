@@ -69,6 +69,8 @@
     <url-pattern>/questions</url-pattern>
     <url-pattern>/admin/questions</url-pattern>
     <url-pattern>/admin/questions/add</url-pattern>
+        <url-pattern>/admin/question/update</url-pattern>
+    
     
   </servlet-mapping>
   

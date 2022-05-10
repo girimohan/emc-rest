@@ -60,6 +60,14 @@ public class QuestionControllerServlet extends HttpServlet {
 			  VIEW_URL = "/admin/addquestion.jsp";
 			  break;
 			  
+			//mo start 
+		  
+		  case "/admin/question/update":
+			  loadQuestionToUpdate(request, response);
+			  VIEW_URL = "/admin/questionupdate.jsp";
+			  break;
+			  
+			 //mo end
 		 }
 		 
 		  dispatcher=request.getRequestDispatcher(VIEW_URL);
@@ -71,6 +79,15 @@ public class QuestionControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String action = request.getServletPath().toLowerCase();
+		
+		if(action.equalsIgnoreCase("/admin/question/update")) {
+			
+			updateQuestion(request, response);
+			
+			
+		}else {
 		
 		String question = request.getParameter("question");
 		System.out.println(question);
@@ -96,9 +113,7 @@ public class QuestionControllerServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 		
 		
-		
-		
-		
+		}
 		
 	}
 	
@@ -127,6 +142,51 @@ public class QuestionControllerServlet extends HttpServlet {
 		return questionsList;
 		
 	}
+	
+	//mo start
+		private void loadQuestionToUpdate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+			String id = request.getParameter("id");
+			REST_URI = "http://127.0.0.1:8080/_rest/questions/get/"+id;
+			WebTarget webTarget = client.target(REST_URI);
+			Builder builder = webTarget.request();
+			Question question = builder.get(Question.class);
+			
+			request.setAttribute("QUESTION",question);
+			
+			RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/questionupdate.jsp");
+			dispatcher.forward(request, response);
+			
+		}
+		//mo ends
+		
+		
+		private void updateQuestion(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
+			Question question =new Question();
+			question.setQuestionId(Integer.parseInt(request.getParameter("id")));
+			question.setQuestion(request.getParameter("question"));
+			
+			REST_URI = "http://127.0.0.1:8080/_rest/questions/update";
+			Client c=ClientBuilder.newClient();
+			WebTarget wt=c.target(REST_URI);
+			Builder b=wt.request();
+			//Here we create an Entity of a Question object as JSON string format
+			Entity<Question> questionEntity=Entity.entity(question,MediaType.APPLICATION_JSON);
+			//Create a GenericType to be able to get List of objects
+			//This will be the second parameter of post method
+			GenericType<List<Question>> genericListQuestion = new GenericType<List<Question>>() {};
+			
+			//Posting data (Entity<ArrayList<DogBreed>> e) to the given address
+			List<Question> questionsList=b.put(questionEntity, genericListQuestion);
+			
+			request.setAttribute("QUESTIONS_LIST", questionsList);
+			request.setAttribute("MSG", "Question Updated Successfully");
+			
+			RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/questions.jsp");
+			dispatcher.forward(request, response);
+		}
+	
+	
 	
 
 }

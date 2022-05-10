@@ -40,6 +40,13 @@ public class Question implements Serializable {
 
 
 
+	public Question(String parameter, String parameter2) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
 	public int getQuestionId() {
 		return this.questionId;
 	}
