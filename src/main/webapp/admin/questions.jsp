@@ -29,7 +29,7 @@
 		<td> ${questions.question } </td>
 		<td>
 		<a href = "" ><button class ="btn btn-prim"> UPDATE</button></a>
-		<a href = "" onclick = "return confirm('Are you sure you want to delete?')"> <button class= "btn btn-danger">DELETE</button></a>
+		<a href = "/admin/questions/delete?id=${questions.questionId}" onclick = "return confirm('Are you sure you want to delete?')"> <button class= "btn btn-danger">DELETE</button></a>
 		</td>
 		</tr>
 		

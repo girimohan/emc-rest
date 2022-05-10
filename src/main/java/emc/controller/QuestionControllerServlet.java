@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 
 import emc.model.Question;
 
@@ -24,6 +26,8 @@ import emc.model.Question;
 
 public class QuestionControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private  String VIEW_URL = null;
      
 	private Client client = ClientBuilder.newClient();
 
@@ -52,10 +56,19 @@ public class QuestionControllerServlet extends HttpServlet {
 			  dispatcher.forward(request, response);
 			  break;
 			  
-			 
+		  case "/admin/questions/delete":
+			List<Question> questionList = deleteQuestion(request, response);
+			VIEW_URL = "/admin/questions.jsp";
+			request.setAttribute("MSG", "Question deleted successfully");
+			request.setAttribute("QUESTIONS_LIST", questionsList);
+			dispatcher = request.getRequestDispatcher(VIEW_URL);
+			dispatcher.forward(request, response);
+			break;
 		  
 			  
 		 }
+		 
+		 
 	}
 
 	/**
@@ -78,7 +91,7 @@ public class QuestionControllerServlet extends HttpServlet {
 	
 	private List<Question> viewAllQuestions(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
-		REST_URI = "http://127.0.0.1:8080/_rest/question/all";
+		REST_URI = "http://127.0.0.1:8080/_rest/questions/all";
 		 
 		 WebTarget webTarget = client.target(REST_URI);
 		 
@@ -91,6 +104,20 @@ public class QuestionControllerServlet extends HttpServlet {
 		return questionsList;
 		
 	}
-	
+	private List<Question> deleteQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String questionId=request.getParameter("id");
+		REST_URI = "http://127.0.0.1:8080/_rest/questions/delete/"+questionId;
+		WebTarget webTarget = client.target(REST_URI);
+		Builder builder = webTarget.request();
+		GenericType<List<Question>> genericList = new GenericType<List<Question>>() {};
+		List<Question>questionList=builder.delete(genericList);
+		request.setAttribute("QUESTIONS_LIST", questionList);
+		return questionList;
+		
+		
+	}
 
-}
+	
+	}
+
+
