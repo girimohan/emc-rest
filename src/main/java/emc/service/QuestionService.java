@@ -59,6 +59,39 @@ public class QuestionService {
 	return questionList;
 	   
 
+   }//mo end
+   
+	//mo start
+	@PUT
+	@Path("/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)	
+	public List<Question> updateQuestion(Question question) throws ServletException, IOException {
+		EntityManager em=emf.createEntityManager();
+		em.getTransaction().begin();
+		Question nquestion = em.find(Question.class, question.getQuestionId());
+		if (nquestion!= null) {
+			em.merge(question);//update line
+		}
+		em.getTransaction().commit();
+		List<Question> questionsList = getAllQuestions();
+		return questionsList;
+		//mo end
+	}
+	@GET
+	@Path("/get/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Question getQuestionById(@PathParam("id") int questionId) {
+		EntityManager em=emf.createEntityManager();
+		em.getTransaction().begin();
+		Question question=em.find(Question.class,questionId);
+		em.getTransaction().commit();
+		return question;
+		
+	}
+
+
    }
    @DELETE
    @Path("/delete/{id}")
@@ -79,6 +112,7 @@ public class QuestionService {
 
 
    
+
 	
 
 
