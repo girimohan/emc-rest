@@ -137,6 +137,12 @@
 	</dependency>
 	
 	
+	<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+<dependency>
+    <groupId>com.google.guava</groupId>
+    <artifactId>guava</artifactId>
+    <version>31.1-jre</version>
+</dependency>
 	
 	<!-- 
 	If using Java 11 or newer add next two.

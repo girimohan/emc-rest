@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<form class="create-form" action ="/savecandidate" method="post" enctype = "multipart/form-data">
+<form class="create-form" action ="/admin/candidates/insert" method="post" enctype = "multipart/form-data">
 		
 		<label for="title" >Surname:</label> <br>
 		<input class ="txtin" id="surname" type="text" name="surname" size="90" required/><br>
@@ -44,7 +44,7 @@
 </textarea> <br>
 
 <label for="kuva">Image</label> <br>
-<input type="file" id="image" name="image" accept=".jpg" /> <br><br>
+<input type="file" id="image" name="image" accept="image/*" /> <br><br>
 	
 		<input class="btn btn-prim"  type="submit" value="Save" class="save"/>
 

@@ -46,21 +46,28 @@ public class CandidateService {
 	/**
 	 * @author DGautam
 	 * @param candidate
+	 * Handles post request to insert candidate.
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
    
 	@POST
 	@Path("/add")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void insertCandidate(Candidate candidate) {
+	public List<Candidate> insertCandidate(Candidate candidate) throws ServletException, IOException {
 		em.getTransaction().begin();
 		em.persist(candidate);
 		em.getTransaction().commit();
+		List<Candidate> candidatesList = getAllCandidates();
+		return candidatesList;
 		
 	}
 	
 	/**
 	 * @author DGautam
+	 * Handles Delete request on candidate
+	 * @param candidateId
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */

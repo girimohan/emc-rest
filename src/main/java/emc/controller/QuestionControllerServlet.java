@@ -44,8 +44,6 @@ public class QuestionControllerServlet extends HttpServlet {
 		List <Question> questionsList = viewAllQuestions(request, response);
 		RequestDispatcher dispatcher;
 		
-		List <Question> questionsList = viewAllQuestions(request, response);
-		RequestDispatcher dispatcher;
 		String VIEW_URL = null;
 		
 		 switch (action) {
