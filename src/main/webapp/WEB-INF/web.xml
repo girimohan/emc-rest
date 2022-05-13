@@ -57,6 +57,7 @@
     <url-pattern>/candidates</url-pattern>
     <url-pattern>/admin/candidates</url-pattern>
     <url-pattern>/admin/candidates/add</url-pattern>
+    <url-pattern>/admin/candidates/insert</url-pattern>
     <url-pattern>/admin/candidates/delete</url-pattern>
   </servlet-mapping>
   
