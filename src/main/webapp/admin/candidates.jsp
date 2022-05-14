@@ -29,6 +29,7 @@
 	  		<th>Name</th>
 	  		<th>Party</th>
 	  		<th>Action</th>
+	  		<th>Survey</th>
   		</tr>
 		</thead>
 	
@@ -42,6 +43,10 @@
 				<td>
 				<a href=""><button class=" btn btn-prim">UPDATE</button></a>
 		  		<a href="/admin/candidates/delete?id=${candidates.candidateId}" onclick="return confirm('Are you sure you want to delete?');"><button class=" btn btn-danger">DELETE</button></a>
+		  		</td>
+		  		<td>
+				<a href="/admin/candidate/questions?id=${candidates.candidateId}"><button class=" btn btn-prim">QUESTIONS</button></a>
+		  		<a href="/admin/candidates/delete?id=${candidates.candidateId}" onclick="return confirm('Are you sure you want to delete?');"><button class=" btn btn-danger">ANSWERS</button></a>
 		  		</td>
 		  	</tr>
   
