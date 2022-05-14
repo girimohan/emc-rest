@@ -21,14 +21,12 @@ import emc.model.Question;
 
 /**
  * Servlet implementation class QuestionControllerServlet
- * Handles request and response for questions. 
+ * Handles question CRUD operation request. Serves as a client for rest services. 
  */
 
 public class QuestionControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private  String VIEW_URL = null;
-     
 	private Client client = ClientBuilder.newClient();
 
 	private String REST_URI;
@@ -205,7 +203,7 @@ public class QuestionControllerServlet extends HttpServlet {
 			//This will be the second parameter of post method
 			GenericType<List<Question>> genericListQuestion = new GenericType<List<Question>>() {};
 			
-			//Posting data (Entity<ArrayList<DogBreed>> e) to the given address
+	
 			List<Question> questionsList=b.put(questionEntity, genericListQuestion);
 			
 			request.setAttribute("QUESTIONS_LIST", questionsList);
@@ -214,6 +212,8 @@ public class QuestionControllerServlet extends HttpServlet {
 			RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/questions.jsp");
 			dispatcher.forward(request, response);
 		}
+		
+		
 	
 	
 	

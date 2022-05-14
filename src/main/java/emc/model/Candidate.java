@@ -39,10 +39,8 @@ public class Candidate implements Serializable {
 
 	private String surname;
 
-
 	//bi-directional many-to-one association to CandidateAnswer
 	@OneToMany(fetch = FetchType.LAZY,mappedBy="candidate")
-	@JsonIgnoreProperties("candidate")
 	private List<CandidateAnswer> candidateAnswers;
 
 	//bi-directional many-to-one association to Party

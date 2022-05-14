@@ -77,5 +77,20 @@
 
   </servlet-mapping>
   
+   <servlet>
+    <description></description>
+    <display-name>AnswerControllerServlet</display-name>
+    <servlet-name>AnswerControllerServlet</servlet-name>
+    <servlet-class>emc.controller.AnswerControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AnswerControllerServlet</servlet-name>
+    <url-pattern>/admin/candidate/questions</url-pattern>
+    <url-pattern>/admin/candidate/answer/insert</url-pattern>
+    
+   
+
+  </servlet-mapping>
+  
   
 </web-app>

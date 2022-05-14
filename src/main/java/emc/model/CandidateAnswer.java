@@ -20,7 +20,7 @@ public class CandidateAnswer implements Serializable {
 	@EmbeddedId
 	private CandidateAnswerPK id;
 
-	private byte answer;
+	private int answer;
 
 	//bi-directional many-to-one association to Candidate
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -29,8 +29,9 @@ public class CandidateAnswer implements Serializable {
 	private Candidate candidate;
 
 	//bi-directional many-to-one association to Question
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="question_id")
+	@JsonIgnoreProperties("candidateAnswers")
 	private Question question;
 
 	public CandidateAnswer() {
@@ -44,11 +45,11 @@ public class CandidateAnswer implements Serializable {
 		this.id = id;
 	}
 
-	public byte getAnswer() {
+	public int getAnswer() {
 		return this.answer;
 	}
 
-	public void setAnswer(byte answer) {
+	public void setAnswer(int answer) {
 		this.answer = answer;
 	}
 
