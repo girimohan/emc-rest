@@ -37,7 +37,7 @@ public class AnswerService {
 	/**
 	 * @author DGautam
 	 * @param Candidate Object
-	 * Handles post request to insert candidate.
+	 * Handles post request to insert answer.
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
@@ -57,8 +57,9 @@ public class AnswerService {
 	
 	/**
 	 * @author DGautam
-	 * @param candidateId
-	 * @return 
+	 * @param  int candidateId
+	 * @return List<CandidateAnswer>
+	 * Gets answers of a candidate.
 	 */
 	
 	@GET
