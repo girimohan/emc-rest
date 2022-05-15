@@ -89,9 +89,7 @@ public class CandidateControllerServlet extends HttpServlet {
 
 	/**
 	 * @author DGautam
-	 * Handles candidate post request to insert candidate.
-	   Gets form field Data. Upload image to the respective folder using copyFile function from emc.utils.uploadimage.java.
-	   And makes a post request to the REST Service using client builder to insert data to database.
+	 * Handles candidate post request to insert candidate and update candidate.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -103,91 +101,13 @@ String action = request.getServletPath().toLowerCase();
 			
 		} else {
 			
-			String surname= request.getParameter("surname");
-			String firstname= request.getParameter("firstname");
-			int partyId= Integer.parseInt(request.getParameter("party"));
-			String profession= request.getParameter("profession");
-			int age= Integer.parseInt(request.getParameter("age"));
-			String ideology = request.getParameter("ideology");
-			String motive = request.getParameter("motive");
-			
-	        Candidate candidate = new Candidate();
-			
-			candidate.setSurname(surname);
-			candidate.setFirstname(firstname);
-			candidate.setProfession(profession);
-			candidate.setAge(age);
-			candidate.setIdeology(ideology);
-			candidate.setMotive(motive);
-			
-			Party party = new Party();
-			party.setPartyId(partyId);
-			
-			candidate.setParty(party);
-			
-			// Input stream of the upload file
-	        InputStream inputStream = null;
-	        
-	     // Obtains the upload file
-	        // part in this multipart request
-	        Part filePart
-	            = request.getPart("image");
-	        
-	        if (filePart != null) {
-	        	  
-	            // Prints out some information
-	            // for debugging
-	            System.out.println(
-	                filePart.getName());
-	            System.out.println(
-	                filePart.getSize());
-	            System.out.println(
-	                filePart.getContentType());
-	            
-	            String filename = UploadImage.extractFileName(filePart);
-	            String contentType = filePart.getContentType();
-	  
-	            // Obtains input stream of the upload file
-	            inputStream
-	                = filePart.getInputStream();
-	            
-	               UploadImage.copyFile(filename, contentType, inputStream);
-	        	   candidate.setImg(filename);
-	        	   
-	        	   REST_URI = "http://127.0.0.1:8080/_rest/candidate/add";
-	        	   WebTarget webTarget = client.target(REST_URI);
-	        	   Builder builder = webTarget.request();
-	        	   
-	        	   Entity<Candidate> ecandidates = Entity.entity(candidate, MediaType.APPLICATION_JSON);
-	        	   
-	        	   GenericType<List<Candidate>> genericList = new GenericType<List<Candidate>>() {};
-	        	   
-	        	   List<Candidate> candidatesList = builder.post(ecandidates,genericList);
-	        	   
-	        	   request.setAttribute("CANDIDATES_LIST", candidatesList);
-	        	   
-	        	   request.setAttribute("MSG", "Candidate Added Successfully" );
-	        	   
-	        	  RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
-	      		  dispatcher.forward(request, response);
-	        	   
-	        	   
-	           }else {
-	        	   
-	        	   System.out.println("Unable to insert");
-	        	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
-	       		  dispatcher.forward(request, response);
-	        	   
-	        	   
-	           }
-			
-		}
+			addCandidate(request, response);
 		
 		
         }
 	
 				
-				
+	}			
 				
 		
 		
@@ -269,6 +189,7 @@ String action = request.getServletPath().toLowerCase();
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
+	 * Gets Individual candidate data from REST Service by making get request.
 	 * 
 	 */
 	
@@ -284,6 +205,110 @@ String action = request.getServletPath().toLowerCase();
 		
 		
 	}
+	
+	/**
+	 * @author DGautam
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 * Gets form field data and create a post request to REST_API to insert candidate
+	 */
+	
+	
+	private void addCandidate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
+		String surname= request.getParameter("surname");
+		String firstname= request.getParameter("firstname");
+		int partyId= Integer.parseInt(request.getParameter("party"));
+		String profession= request.getParameter("profession");
+		int age= Integer.parseInt(request.getParameter("age"));
+		String ideology = request.getParameter("ideology");
+		String motive = request.getParameter("motive");
+		
+        Candidate candidate = new Candidate();
+		
+		candidate.setSurname(surname);
+		candidate.setFirstname(firstname);
+		candidate.setProfession(profession);
+		candidate.setAge(age);
+		candidate.setIdeology(ideology);
+		candidate.setMotive(motive);
+		
+		Party party = new Party();
+		party.setPartyId(partyId);
+		
+		candidate.setParty(party);
+		
+		// Input stream of the upload file
+        InputStream inputStream = null;
+        
+     // Obtains the upload file
+        // part in this multipart request
+        Part filePart
+            = request.getPart("image");
+        
+        if (filePart != null) {
+        	  
+            // Prints out some information
+            // for debugging
+            System.out.println(
+                filePart.getName());
+            System.out.println(
+                filePart.getSize());
+            System.out.println(
+                filePart.getContentType());
+            
+            String filename = UploadImage.extractFileName(filePart);
+            String contentType = filePart.getContentType();
+  
+            // Obtains input stream of the upload file
+            inputStream
+                = filePart.getInputStream();
+            
+               UploadImage.copyFile(filename, contentType, inputStream);
+        	   candidate.setImg(filename);
+        	   
+        	   REST_URI = "http://127.0.0.1:8080/_rest/candidate/add";
+        	   WebTarget webTarget = client.target(REST_URI);
+        	   Builder builder = webTarget.request();
+        	   
+        	   Entity<Candidate> ecandidates = Entity.entity(candidate, MediaType.APPLICATION_JSON);
+        	   
+        	   GenericType<List<Candidate>> genericList = new GenericType<List<Candidate>>() {};
+        	   
+        	   List<Candidate> candidatesList = builder.post(ecandidates,genericList);
+        	   
+        	   request.setAttribute("CANDIDATES_LIST", candidatesList);
+        	   
+        	   request.setAttribute("MSG", "Candidate Added Successfully" );
+        	   
+        	  RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+      		  dispatcher.forward(request, response);
+        	   
+        	   
+           }else {
+        	   
+        	   System.out.println("Unable to insert");
+        	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+       		  dispatcher.forward(request, response);
+        	   
+        	   
+           }
+		
+	}
+		
+	
+	
+	/**
+	 * @author Mohan
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 * Gets Data from field and insert into database using jpa rest service.
+	 * 
+	 */
 	
 	private void updateCandidate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
@@ -353,6 +378,14 @@ String action = request.getServletPath().toLowerCase();
 		
 		
 	}
+	
+	/**
+	 * @author DGautam
+	 * @param request
+	 * @param image
+	 * @return
+	 * Checks for any empty file input in the form while uploading any file.
+	 */
 	
 	private InputStream getImageStream(HttpServletRequest request, String image){       
         try {
