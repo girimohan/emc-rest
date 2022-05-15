@@ -59,6 +59,7 @@
     <url-pattern>/admin/candidates/add</url-pattern>
     <url-pattern>/admin/candidates/insert</url-pattern>
     <url-pattern>/admin/candidates/delete</url-pattern>
+    <url-pattern>/admin/candidate/update</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -87,6 +88,7 @@
     <servlet-name>AnswerControllerServlet</servlet-name>
     <url-pattern>/admin/candidate/questions</url-pattern>
     <url-pattern>/admin/candidate/answer/insert</url-pattern>
+    <url-pattern>/admin/candidate/answers</url-pattern>
     
    
 

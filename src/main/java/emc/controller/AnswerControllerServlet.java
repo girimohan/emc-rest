@@ -42,6 +42,7 @@ public class AnswerControllerServlet extends HttpServlet {
 		String VIEW_URL=null;
 		int candidateId = Integer.parseInt(request.getParameter("id"));
 		RequestDispatcher dispatcher;
+		Candidate candidateInfo = getCandidateInfoById(candidateId);;
 		
 		switch (action) {
 		  
@@ -50,11 +51,19 @@ public class AnswerControllerServlet extends HttpServlet {
 			List<Question> questionsList = getQuestionsForCandidateToAnswer(candidateId);
 			request.setAttribute("QUESTIONS_LIST", questionsList);
 			
-			Candidate candidateInfo = getCandidateInfoById(candidateId);
 			request.setAttribute("CANDIDATE_INFO", candidateInfo);
 			
 			VIEW_URL = "/admin/candidatequestions.jsp";
 			
+			break;
+	
+		case "/admin/candidate/answers":
+			
+			request.setAttribute("CANDIDATE_INFO", candidateInfo);
+			
+			List<CandidateAnswer> candidateAnswerList = getCandidateAnswers(candidateId);
+			request.setAttribute("CANDIDATE_ANSWERS", candidateAnswerList);
+			VIEW_URL = "/admin/candidateanswer.jsp";
 			break;
 		
 		
@@ -70,67 +79,16 @@ public class AnswerControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		  
-		List<CandidateAnswer> candidateAnswers=null;
 		
-		 int candidateId = Integer.parseInt(request.getParameter("id"));
-		
-		  String []questionIds = request.getParameterValues("questionId");
-		  for(String questionId:questionIds) {
-			  
-			  
-			 
-			 
-			  int questionid = Integer.parseInt(questionId);
-			
-			  int answer = Integer.parseInt(request.getParameter("question_"+questionid));
-			  
-			  REST_URI = "http://127.0.0.1:8080/_rest/answers/insert/"+candidateId;
-			   
-			  
-			  Question question = new Question();
-			  Candidate candidate = new Candidate();
-			  CandidateAnswerPK candidateAnswerPK = new CandidateAnswerPK();
-			  CandidateAnswer candidateAnswer = new CandidateAnswer();
-			  
-			  
-			  question.setQuestionId(questionid);
-			  candidate.setCandidateId(candidateId);
-			  
-			  candidateAnswerPK.setCandidateId(candidateId);
-			  candidateAnswerPK.setQuestionId(questionid);
-			   
-			  
-			  candidateAnswer.setId(candidateAnswerPK);
-			  candidateAnswer.setQuestion(question);
-			  candidateAnswer.setCandidate(candidate);
-			  candidateAnswer.setAnswer(answer);
-			   
-			  WebTarget webTarget = client.target(REST_URI);
-	    	  Builder builder = webTarget.request();
-	    	  
-	         Entity<CandidateAnswer> eCandidateAnswer = Entity.entity(candidateAnswer, MediaType.APPLICATION_JSON);
-    	   
-    	     GenericType<List<CandidateAnswer>> genericList = new GenericType<List<CandidateAnswer>>() {};
-    	   
-    	     candidateAnswers = builder.post(eCandidateAnswer,genericList);
-			
-			  
-			  
-		  }
-		  
-		   
-    	   
-    
-    	   
-    	   request.setAttribute("C_ANSWERS_LIST", candidateAnswers);
-    	   
-		   
-    	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidateanswer.jsp");
-   		  dispatcher.forward(request, response);
-		
-		
+		addCandidateAnswers(request, response);
+	
 	}
+	
+	/**
+	 * @author DGautam
+	 * @param candidateId
+	 * @return
+	 */
 	
 	private List<Question> getQuestionsForCandidateToAnswer(int candidateId) {
 		
@@ -148,6 +106,13 @@ public class AnswerControllerServlet extends HttpServlet {
 	    	
 		
 	}
+	/**
+	 * 
+	 * @param candidateId
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	
 	private Candidate getCandidateInfoById(int candidateId) throws ServletException, IOException {
 		REST_URI = "http://127.0.0.1:8080/_rest/candidate/get/"+candidateId;
@@ -157,5 +122,103 @@ public class AnswerControllerServlet extends HttpServlet {
 	   return candidate;
 		
 	}
+	
+	/**
+	 * @author DGautam
+	 * Add Candidate Answers using REST Service.
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	
+	private  void addCandidateAnswers(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
+		  
+			List<CandidateAnswer> candidateAnswers=null;
+			
+			 int candidateId = Integer.parseInt(request.getParameter("id"));
+			
+			  String []questionIds = request.getParameterValues("questionId");
+			  for(String questionId:questionIds) {
+				  
+				  
+				 
+				 
+				  int questionid = Integer.parseInt(questionId);
+				
+				  int answer = Integer.parseInt(request.getParameter("question_"+questionid));
+				  
+				  REST_URI = "http://127.0.0.1:8080/_rest/answers/insert/"+candidateId;
+				   
+				  
+				  Question question = new Question();
+				  Candidate candidate = new Candidate();
+				  CandidateAnswerPK candidateAnswerPK = new CandidateAnswerPK();
+				  CandidateAnswer candidateAnswer = new CandidateAnswer();
+				  
+				  
+				  question.setQuestionId(questionid);
+				  candidate.setCandidateId(candidateId);
+				  
+				  candidateAnswerPK.setCandidateId(candidateId);
+				  candidateAnswerPK.setQuestionId(questionid);
+				   
+				  
+				  candidateAnswer.setId(candidateAnswerPK);
+				  candidateAnswer.setQuestion(question);
+				  candidateAnswer.setCandidate(candidate);
+				  candidateAnswer.setAnswer(answer);
+				   
+				  WebTarget webTarget = client.target(REST_URI);
+		    	  Builder builder = webTarget.request();
+		    	  
+		         Entity<CandidateAnswer> eCandidateAnswer = Entity.entity(candidateAnswer, MediaType.APPLICATION_JSON);
+	    	   
+	    	     GenericType<List<CandidateAnswer>> genericList = new GenericType<List<CandidateAnswer>>() {};
+	    	   
+	    	     candidateAnswers = builder.post(eCandidateAnswer,genericList);
+				
+				  
+				  
+			  }
+			  
+			   
+	    	   
+	    
+	    	   
+	    	   request.setAttribute("C_ANSWERS_LIST", candidateAnswers);
+	    	   
+			   
+	    	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidateanswer.jsp");
+	   		  dispatcher.forward(request, response);
+			
+			
+		}
+	
+	/**
+	 * Gets all answers of a candidate using rest service
+	 * @author DGautam
+	 * @param candidateId
+	 * @return
+	 */
+	
+	   private List<CandidateAnswer> getCandidateAnswers(int candidateId){
+		   
+		REST_URI = "http://127.0.0.1:8080/_rest/answers/get/"+candidateId;
+		
+		WebTarget webTarget = client.target(REST_URI);
 
-}
+	     Builder builder = webTarget.request();
+	
+	   	GenericType<List<CandidateAnswer>> genericList = new GenericType<List<CandidateAnswer>>() {};
+		
+		List<CandidateAnswer> candidateAnswerList = builder.get(genericList);
+		   
+		return candidateAnswerList;
+		   
+	   }
+		
+	}
+
+

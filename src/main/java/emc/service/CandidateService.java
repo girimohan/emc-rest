@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -135,6 +136,22 @@ public class CandidateService {
 		return questionsList;
 				
   }
+	
+	@PUT
+	@Path("/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<Candidate> updateCandidate(Candidate candidate) throws ServletException, IOException{
+		EntityManager em= emf.createEntityManager();
+		em.getTransaction().begin();
+		Candidate ncandidate = em.find(Candidate.class, candidate.getCandidateId());
+		if (ncandidate!=null) {
+			em.merge(candidate);//update line
+		}
+		em.getTransaction().commit();
+		List<Candidate> candidateList = getAllCandidates();
+		return candidateList;
+	}
 	
   
 	

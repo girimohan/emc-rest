@@ -15,7 +15,7 @@
 <c:choose>
 <c:when test="${empty requestScope.QUESTIONS_LIST}">
 <h3>No New Questions to Answer</h3>
-<a href=" "><button class=" btn btn-danger"> VIEW ANSWERS</button></a>
+<a href="/admin/candidate/answers?id=${requestScope.CANDIDATE_INFO.candidateId }"><button class=" btn btn-danger"> VIEW ANSWERS</button></a>
 </c:when>
 <c:otherwise>
        
