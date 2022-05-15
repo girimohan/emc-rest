@@ -53,6 +53,7 @@ public class CandidateControllerServlet extends HttpServlet {
 			  request.setAttribute("CANDIDATES_LIST", candidatesList);
 			  VIEW_URL = "/candidates.jsp";
 			  break;
+			  
 		  case "/admin/candidates":
 			  request.setAttribute("CANDIDATES_LIST", candidatesList);
 			  VIEW_URL = "/admin/candidates.jsp";
@@ -70,8 +71,16 @@ public class CandidateControllerServlet extends HttpServlet {
 			  request.setAttribute("MSG", "Candidate deleted successfully");
 			  request.setAttribute("CANDIDATES_LIST",candidatesList);
 			  break;
+		
+		  case "/admin/candidate/update":
+			  List<Party> partiesListu = getAllParties(request, response);
+			  request.setAttribute("PARTIES_LIST", partiesListu);
+			  Candidate candidateInfo = loadCandidateToUpdate(request, response);
+			  request.setAttribute("CANDIDATE_INFO", candidateInfo);
+			  VIEW_URL= "/admin/candidateupdate.jsp";
+			  break;
 			  
-		 }
+		 } 
 		 
 		 dispatcher = request.getRequestDispatcher(VIEW_URL);
 		 dispatcher.forward(request, response);
@@ -86,85 +95,95 @@ public class CandidateControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    
+String action = request.getServletPath().toLowerCase();
 		
-		String surname= request.getParameter("surname");
-		String firstname= request.getParameter("firstname");
-		int partyId= Integer.parseInt(request.getParameter("party"));
-		String profession= request.getParameter("profession");
-		int age= Integer.parseInt(request.getParameter("age"));
-		String ideology = request.getParameter("ideology");
-		String motive = request.getParameter("motive");
+		if(action.equalsIgnoreCase("/admin/candidate/update")) {
+			
+			updateCandidate(request, response);
+			
+		} else {
+			
+			String surname= request.getParameter("surname");
+			String firstname= request.getParameter("firstname");
+			int partyId= Integer.parseInt(request.getParameter("party"));
+			String profession= request.getParameter("profession");
+			int age= Integer.parseInt(request.getParameter("age"));
+			String ideology = request.getParameter("ideology");
+			String motive = request.getParameter("motive");
+			
+	        Candidate candidate = new Candidate();
+			
+			candidate.setSurname(surname);
+			candidate.setFirstname(firstname);
+			candidate.setProfession(profession);
+			candidate.setAge(age);
+			candidate.setIdeology(ideology);
+			candidate.setMotive(motive);
+			
+			Party party = new Party();
+			party.setPartyId(partyId);
+			
+			candidate.setParty(party);
+			
+			// Input stream of the upload file
+	        InputStream inputStream = null;
+	        
+	     // Obtains the upload file
+	        // part in this multipart request
+	        Part filePart
+	            = request.getPart("image");
+	        
+	        if (filePart != null) {
+	        	  
+	            // Prints out some information
+	            // for debugging
+	            System.out.println(
+	                filePart.getName());
+	            System.out.println(
+	                filePart.getSize());
+	            System.out.println(
+	                filePart.getContentType());
+	            
+	            String filename = UploadImage.extractFileName(filePart);
+	            String contentType = filePart.getContentType();
+	  
+	            // Obtains input stream of the upload file
+	            inputStream
+	                = filePart.getInputStream();
+	            
+	               UploadImage.copyFile(filename, contentType, inputStream);
+	        	   candidate.setImg(filename);
+	        	   
+	        	   REST_URI = "http://127.0.0.1:8080/_rest/candidate/add";
+	        	   WebTarget webTarget = client.target(REST_URI);
+	        	   Builder builder = webTarget.request();
+	        	   
+	        	   Entity<Candidate> ecandidates = Entity.entity(candidate, MediaType.APPLICATION_JSON);
+	        	   
+	        	   GenericType<List<Candidate>> genericList = new GenericType<List<Candidate>>() {};
+	        	   
+	        	   List<Candidate> candidatesList = builder.post(ecandidates,genericList);
+	        	   
+	        	   request.setAttribute("CANDIDATES_LIST", candidatesList);
+	        	   
+	        	   request.setAttribute("MSG", "Candidate Added Successfully" );
+	        	   
+	        	  RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+	      		  dispatcher.forward(request, response);
+	        	   
+	        	   
+	           }else {
+	        	   
+	        	   System.out.println("Unable to insert");
+	        	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+	       		  dispatcher.forward(request, response);
+	        	   
+	        	   
+	           }
+			
+		}
 		
-        Candidate candidate = new Candidate();
 		
-		candidate.setSurname(surname);
-		candidate.setFirstname(firstname);
-		candidate.setProfession(profession);
-		candidate.setAge(age);
-		candidate.setIdeology(ideology);
-		candidate.setMotive(motive);
-		
-		Party party = new Party();
-		party.setPartyId(partyId);
-		
-		candidate.setParty(party);
-		
-		// Input stream of the upload file
-        InputStream inputStream = null;
-        
-     // Obtains the upload file
-        // part in this multipart request
-        Part filePart
-            = request.getPart("image");
-        
-        if (filePart != null) {
-        	  
-            // Prints out some information
-            // for debugging
-            System.out.println(
-                filePart.getName());
-            System.out.println(
-                filePart.getSize());
-            System.out.println(
-                filePart.getContentType());
-            
-            String filename = filePart.getName();
-            String contentType = filePart.getContentType();
-  
-            // Obtains input stream of the upload file
-            inputStream
-                = filePart.getInputStream();
-            
-               UploadImage.copyFile(filename, contentType, inputStream);
-        	   candidate.setImg(filename);
-        	   
-        	   REST_URI = "http://127.0.0.1:8080/_rest/candidate/add";
-        	   WebTarget webTarget = client.target(REST_URI);
-        	   Builder builder = webTarget.request();
-        	   
-        	   Entity<Candidate> ecandidates = Entity.entity(candidate, MediaType.APPLICATION_JSON);
-        	   
-        	   GenericType<List<Candidate>> genericList = new GenericType<List<Candidate>>() {};
-        	   
-        	   List<Candidate> candidatesList = builder.post(ecandidates,genericList);
-        	   
-        	   request.setAttribute("CANDIDATES_LIST", candidatesList);
-        	   
-        	   request.setAttribute("MSG", "Candidate Added Successfully" );
-        	   
-        	  RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
-      		  dispatcher.forward(request, response);
-        	   
-        	   
-           }else {
-        	   
-        	   System.out.println("Unable to insert");
-        	   RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
-       		  dispatcher.forward(request, response);
-        	   
-        	   
-           }
         }
 	
 				
@@ -243,6 +262,114 @@ public class CandidateControllerServlet extends HttpServlet {
 		return candidatesList;
 		
 	}
+	
+	/**
+	 * @author Mohan
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 * 
+	 */
+	
+	
+	private Candidate loadCandidateToUpdate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
+		String id = request.getParameter("id");
+		REST_URI = "http://127.0.0.1:8080/_rest/candidate/get/"+ id;
+		WebTarget webTarget = client.target(REST_URI);
+		Builder builder = webTarget.request();
+		Candidate candidateInfo = builder.get(Candidate.class);
+		return candidateInfo;
+		
+		
+	}
+	
+	private void updateCandidate(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
+		int candidateId = Integer.parseInt(request.getParameter("id"));
+		String surname= request.getParameter("surname");
+		String firstname= request.getParameter("firstname");
+		int partyId= Integer.parseInt(request.getParameter("party"));
+		String profession= request.getParameter("profession");
+		int age= Integer.parseInt(request.getParameter("age"));
+		String ideology = request.getParameter("ideology");
+		String motive = request.getParameter("motive");
+		
+        Candidate candidate = new Candidate();
+		
+        candidate.setCandidateId(candidateId);
+		candidate.setSurname(surname);
+		candidate.setFirstname(firstname);
+		candidate.setProfession(profession);
+		candidate.setAge(age);
+		candidate.setIdeology(ideology);
+		candidate.setMotive(motive);
+		
+		Party party = new Party();
+		party.setPartyId(partyId);
+		
+		candidate.setParty(party);
+        
+       InputStream image = getImageStream(request, "image");
+        
+        if (image != null) {
+            
+        	Part filePart = request.getPart("image");
+        	String filename = UploadImage.extractFileName(filePart);
+            String contentType = filePart.getContentType();
+  
+        
+            
+               UploadImage.copyFile(filename, contentType, image);
+        	   candidate.setImg(filename);
+        	   
+        } else {
+        	
+        	candidate.setImg(request.getParameter("prevImg"));
+        }
+        
+        	   
+        	   REST_URI = "http://127.0.0.1:8080/_rest/candidate/update";
+        	   WebTarget webTarget = client.target(REST_URI);
+        	   Builder builder = webTarget.request();
+        	   
+        	   Entity<Candidate> ecandidates = Entity.entity(candidate, MediaType.APPLICATION_JSON);
+        	   
+        	   GenericType<List<Candidate>> genericList = new GenericType<List<Candidate>>() {};
+        	   
+        	   List<Candidate> candidatesList = builder.put(ecandidates,genericList);
+        	   
+        	   request.setAttribute("CANDIDATES_LIST", candidatesList);
+        	   
+        	   request.setAttribute("MSG", "Candidate Updated Successfully" );
+        	   
+        	  RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/candidates.jsp");
+      		  dispatcher.forward(request, response);
+        	   
+        	   
+           
+		
+		
+		
+	}
+	
+	private InputStream getImageStream(HttpServletRequest request, String image){       
+        try {
+            Part part = request.getPart(image);
+            String header = part.getHeader("content-disposition");
+            InputStream input = null;
+            if(header.contains("filename")){
+                input =  part.getInputStream();
+            }            
+            return input;
+        } catch (IOException | ServletException e ){
+            e.printStackTrace();
+        }
+        return null;
+    }
+	
+	
 
 	
 

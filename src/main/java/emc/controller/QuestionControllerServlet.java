@@ -155,6 +155,8 @@ public class QuestionControllerServlet extends HttpServlet {
 		return questionsList;
 		
 	}
+	
+	
 	private List<Question> deleteQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String questionId=request.getParameter("id");
 		REST_URI = "http://127.0.0.1:8080/_rest/questions/delete/"+questionId;

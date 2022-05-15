@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
+import javax.servlet.http.Part;
 
 import com.google.appengine.repackaged.com.google.common.io.Files;
 
@@ -19,6 +19,21 @@ import com.google.appengine.repackaged.com.google.common.io.Files;
  */
 
 public class UploadImage {
+	
+	
+	public static String extractFileName(Part part) {
+
+	    String contenDisp = part.getHeader("content-disposition");
+	    String [] items = contenDisp.split(";");
+	    for (String s : items)
+	    {
+	        if (s.trim().startsWith("filename"))
+	        {
+	            return s.substring(s.indexOf("=") + 2, s.length()-1);
+	        }
+	    }
+	    return "";       
+	}
 	
 	
 	/**
