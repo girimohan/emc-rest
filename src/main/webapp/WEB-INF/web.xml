@@ -87,6 +87,7 @@
     <servlet-name>AnswerControllerServlet</servlet-name>
     <url-pattern>/admin/candidate/questions</url-pattern>
     <url-pattern>/admin/candidate/answer/insert</url-pattern>
+    <url-pattern>/admin/candidate/answers</url-pattern>
     
    
 

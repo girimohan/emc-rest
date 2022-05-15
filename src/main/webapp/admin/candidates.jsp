@@ -46,7 +46,7 @@
 		  		</td>
 		  		<td>
 				<a href="/admin/candidate/questions?id=${candidates.candidateId}"><button class=" btn btn-prim">QUESTIONS</button></a>
-		  		<a href="/admin/candidates/delete?id=${candidates.candidateId}" onclick="return confirm('Are you sure you want to delete?');"><button class=" btn btn-danger">ANSWERS</button></a>
+		  		<a href="/admin/candidate/answers?id=${candidates.candidateId}"><button class=" btn btn-danger">ANSWERS</button></a>
 		  		</td>
 		  	</tr>
   
