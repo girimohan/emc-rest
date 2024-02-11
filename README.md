@@ -20,8 +20,8 @@ Our project focused on developing Election Machine software for an imaginary cli
 
 The Election Machine was required to be implemented as a browser-based application using RESTful technology. The user interface was developed using JavaServer Pages (JSP). The technology stack included:
 
-- RESTful web services technology (with optional servlets if needed).
+- RESTful web services technology (using servlets).
 - JSP for the view in the MVC architecture.
 - Database programming using Java Persistence API (JPA).
 
-The focus was on creating a functional prototype that met the specified requirements and could be presented during the review meeting at the end of the project period.
+The focus was on creating a functional prototype that met the specified requirements and was presented during the review meeting at the end of the project period.
